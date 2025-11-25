@@ -1,0 +1,73 @@
+---
+title: "Shaders: High Fidelity from X and Y"
+date: "November 2025"
+readTime: "8 min read"
+category: "Pixels and Color"
+---
+
+Imagine you are given a blank canvas. But unlike a traditional painter who strokes a brush across the surface, you are given a strict rule: you cannot touch the canvas. Instead, you must write a tiny set of instructions. This instruction set visits every single pixel on the screen independently and asks, "Given your X and Y coordinates, what color should you be?"
+
+This is the world of **Fragment Shaders**. It is a shift from imperative drawing (draw a line from A to B) to declarative mathematical logic. It is how we create photorealistic worlds, fluid UI animations, and complex data visualizations using nothing but math and the GPU.
+
+<div className="my-12 flex justify-center text-gray-300">
+  ╌╌╌╌
+</div>
+
+## The Parallel Paradigm
+
+To understand shaders, you must understand the hardware. The CPU (Central Processing Unit) is like a professor: incredibly smart, capable of complex logic, but it does tasks sequentially. The GPU (Graphics Processing Unit) is like an army of elementary school students. Individually, they can only do simple math, but there are thousands of them, and they all work at the exact same time.
+
+When you write a shader, you aren't writing a program that runs once. You are writing a program that runs **millions of times per frame**—once for every pixel—simultaneously.
+
+
+
+
+### The Pipeline
+
+![Graphics Pipeline](/figures/graphics-pipeline.png)
+
+## Normalizing the World
+
+The prompt asks: *How do you draw with just an x and y coordinate?*
+
+If your screen is $1920 \times 1080$, dealing with raw pixel coordinates is messy. The first step in almost any shader is **normalization**. We map the coordinates to a range between $0.0$ and $1.0$.
+
+In GLSL (OpenGL Shading Language), it looks like this:
+
+```glsl
+vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+```
+
+Now, `uv.x` is a gradient from $0$ (left) to $1$ (right), and `uv.y` is a gradient from $0$ (bottom) to $1$ (top).
+
+## Painting with Math
+
+Since we cannot "draw" a shape, we must define shapes using logic. We use **Signed Distance Functions (SDFs)**. We calculate the distance from the current pixel to the center of a theoretical object.
+
+### Example: Drawing a Circle
+
+To draw a circle, we don't store a sprite. We simply ask: *Is this pixel's distance from the center less than the radius?*
+
+$$
+d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}
+$$
+
+If $d < 0.5$, paint it white. Otherwise, paint it black.
+
+However, computers are discrete. If you use a hard `if/else` statement, you get jagged, pixelated edges (aliasing). To get "High Fidelity," we use interpolation functions like `smoothstep`. This creates a soft gradient at the edge of the shape, resulting in perfect anti-aliasing regardless of the resolution.
+
+> "In the shader world, mathematics is the paintbrush. Trigonometry defines motion, and distance fields define shape."
+
+## Why This Matters for AI and Engineering
+
+You might wonder why a blog about AI and Machine Learning is discussing graphics programming.
+
+**Compute Parity:** The same hardware that renders these pixels (NVIDIA GPUs) powers the Large Language Models (LLMs) we use daily. Understanding how GPUs handle parallel vector math is fundamental to optimizing tensor operations.
+
+**Data Visualization:** When dealing with millions of data points in high-dimensional space, standard DOM elements (HTML/SVG) choke. Shaders can render millions of interactive points at 60 frames per second because they process them in parallel.
+
+**Procedural Generation:** Just as Generative Adversarial Networks (GANs) create images, shaders can procedurally generate textures and terrain without storing image files, saving massive amounts of memory.
+
+## The Next Step
+
+Shaders turn software engineers into mathematical artists. If you want to visualize the math behind your neural networks or create high-performance interfaces, this is the tool.

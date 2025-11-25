@@ -1,0 +1,112 @@
+---
+title: "Demystifying Neural Networks: The Engines of Modern AI"
+date: "November 2025"
+readTime: "10 min read"
+category: "AI and ML"
+---
+
+From self-driving cars to the LLMs generating code in your IDE, **Neural Networks** are the fundamental architecture driving the current AI revolution. While they are often treated as "black boxes," understanding the mechanics inside them removes the magic and reveals the math.
+
+At their core, neural networks are universal function approximators. They are systems designed to recognize patterns, loosely modeled after the human brain, but grounded firmly in linear algebra and calculus.
+
+<div className="my-12 flex justify-center text-gray-300">
+  ╌╌╌╌
+</div>
+
+## The Atomic Unit: The Neuron (Perceptron)
+
+Before building a network, we must understand the single unit: the **Neuron** (or Perceptron).
+
+A biological neuron receives electrical signals through dendrites, processes them, and if the signal is strong enough, fires an output through an axon. An artificial neuron does the same thing, but with numbers.
+
+
+
+![Biological vs Artificial Neuron](/figures/neuron-comparison.png)
+
+
+The mathematical operation inside a single neuron can be broken down into three steps:
+
+1.  **Inputs ($x$):** The data fed into the model.
+2.  **Weights ($w$):** The importance of each input. If a specific input is crucial for the decision, it gets a higher weight.
+3.  **Bias ($b$):** An offset value that allows the activation function to be shifted left or right (similar to the intercept in a linear equation).
+
+The formula for the pre-activation output is:
+
+$$ z = sum (w_i cdot x_i) + b $$
+
+### The Activation Function
+
+If we only used the formula above, the output would be linear. However, real-world data is rarely linear. To introduce complexity, we pass the result $z$ through an **Activation Function**.
+
+This function decides whether the neuron should "fire" (pass information forward) and how strong that signal should be.
+
+* **ReLU (Rectified Linear Unit):** $f(x) = max(0, x)$. If the number is positive, keep it; if negative, make it zero. It is computationally efficient and widely used in hidden layers.
+* **Sigmoid:** Squashes numbers between 0 and 1. Useful for binary classification (e.g., Is this a cat? Yes/No).
+
+> **Analogy:** Think of a neuron as a hiring committee. The inputs are a candidate's resume (GPA, experience, portfolio). The weights represent how much the company values each trait (portfolio > GPA). The bias is the urgency to hire. The activation function is the final "Yes/No" decision.
+
+<div className="my-12 flex justify-center text-gray-300">
+  ╌╌╌╌
+</div>
+
+## The Architecture: Layers and Depth
+
+A single neuron can't solve complex problems. To handle tasks like image recognition, we stack neurons into **Layers**.
+
+1.  **Input Layer:** Receives the raw data (e.g., pixel values of an image).
+2.  **Hidden Layers:** Layers between input and output where the "magic" happens. They extract features—edges, shapes, and textures. When a network has many hidden layers, we call it **Deep Learning**.
+3.  **Output Layer:** Delivers the final prediction.
+
+![Deep Neural Network Architecture](/figures/dnn-architecture.png)
+
+<div className="my-12 flex justify-center text-gray-300">
+  ╌╌╌╌
+</div>
+
+## How It Learns: Forward and Backward
+
+A neural network isn't "smart" when initialized. It usually starts with random weights. The process of learning is simply the process of adjusting those weights until the error is minimized.
+
+### 1. Forward Propagation ( The Guess)
+
+Data flows from the input layer through the hidden layers to the output. The network takes the inputs, multiplies them by the current weights, adds biases, applies activation functions, and produces a prediction.
+
+### 2. Loss Function (The Scorecard)
+
+We need to measure how wrong the guess was. The **Loss Function** calculates the distance between the model's prediction ($hat{y}$) and the actual target ($y$). Common loss functions include:
+
+  * **Mean Squared Error (MSE):** Used for regression.
+  * **Cross-Entropy Loss:** Used for classification.
+
+### 3. Backpropagation (The Blame Game)
+
+This is the fundamental algorithm of machine learning. Once we know the error, we need to know **which weights contributed to that error**.
+
+Using the Chain Rule of calculus, we compute the gradient of the loss function with respect to each weight. We move backward from the output layer to the input layer, assigning "blame" to the weights that led to the wrong answer.
+
+### 4. Optimizer (The Correction)
+
+Finally, we update the weights to reduce the error. This is often done using **Gradient Descent**.
+
+Imagine you are standing on a mountain (the loss landscape) at night. You want to get to the lowest point (minimum error). You can't see the bottom, but you can feel the slope of the ground under your feet. You take a step in the direction of the steepest descent.
+
+The size of the step you take is called the **Learning Rate**.
+
+  * **Step too big:** You might overshoot the valley.
+  * **Step too small:** It will take forever to reach the bottom.
+
+$$ w_{new} = w_{old} - text{learning rate} times frac{partial Loss}{partial w} $$
+
+<div className="my-12 flex justify-center text-gray-300">
+  ╌╌╌╌
+</div>
+
+## Summary for Engineers
+
+If you strip away the hype, a neural network is a mathematical machine that tunes parameters to map inputs to outputs.
+
+  * **Data** is transformed into matrices (Tensors).
+  * **Architecture** defines the flow of the math operations.
+  * **Training** is the optimization loop minimizing the loss function.
+
+Understanding these fundamentals is the first step toward mastering more advanced architectures like Transformers, GANs, and Diffusion models.
