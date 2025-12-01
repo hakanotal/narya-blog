@@ -37,7 +37,7 @@ export default function Sidebar({ content = [] }: SidebarProps) {
         <aside className="w-full md:w-64 md:flex-shrink-0 md:border-r md:border-black/5 dark:md:border-white/5 md:h-screen md:sticky md:top-0 p-8 flex flex-col gap-8 overflow-y-auto scrollbar-thin bg-background transition-colors duration-300">
             <div>
                 <Link href="/" className="font-mono text-lg font-bold tracking-tight text-red-600 flex items-center gap-2 group w-fit">
-                    <div className="relative w-8 h-8 transition-transform duration-300 group-hover:rotate-180">
+                    <div className="relative w-6 h-6 transition-transform duration-300 group-hover:rotate-360">
                         <Image src="/logo.svg" alt="Narya Logo" fill className="object-contain" />
                     </div>
                     <span className="transition-transform duration-300 group-hover:translate-x-1">Narya</span>

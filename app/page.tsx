@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center max-w-2xl mx-auto">
       <main className="flex flex-col gap-8 items-center">
-        <div className="relative w-24 h-24 mb-4">
+        <div className="relative w-18 h-18 mb-4">
           <Image src="/logo.svg" alt="Narya Logo" fill className="object-contain" />
         </div>
 
@@ -34,7 +34,7 @@ export default function Home() {
 
         <div className="mt-8">
           <Link
-            href="/chapters/neural-nets-and-transformers"
+            href="/chapters/ch1"
             className="inline-flex items-center justify-center px-8 py-3 border border-red-200 rounded-full text-sm font-mono text-red-600 hover:bg-red-600 hover:text-white transition-all"
           >
             Start Reading
