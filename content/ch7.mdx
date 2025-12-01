@@ -1,0 +1,77 @@
+---
+title: "The Calculus of Correction: Understanding Derivatives in Neural Networks"
+shortTitle: "🚧"
+
+date: "December 2025"
+
+readTime: "7 min read"
+
+category: "AI and ML"
+
+---
+
+In our previous attempts at optimization, we established a hard truth: trying to find the optimal set of parameters (weights and biases) by random searching is futile because the space of possibilities is infinite. To succeed in training a neural network, we need an intelligent, mathematically informed way to determine exactly how and how much to adjust each parameter to reduce the network's error.
+
+This intelligent method relies entirely on **calculus**, specifically the concept of the **derivative**. The derivative is the foundation upon which all learning algorithms in deep learning are built.
+
+<div className="my-12 flex justify-center text-gray-300">
+
+  ╌╌╌╌
+
+</div>
+
+## The Problem of Impact: Why Derivatives Matter
+
+The central goal of network training is to drive the **loss value** towards zero. We measure loss as a function of the model's output, and since the network's weights and biases directly influence that output, they ultimately impact the loss.
+
+Therefore, we must calculate the specific impact that *each individual weight and bias* has on the final loss score.
+
+### Step 1: Revisiting the Slope
+
+The concept underlying the derivative is the familiar algebraic **slope**, often defined as "rise over run" or the change in $y$ divided by the change in $x$ ($\Delta y / \Delta x$).
+
+For simple linear functions, the slope is constant. For example, in the linear function $f(x)=2x$, the slope is always $2$. This value (2.0) defines the measure of impact that $x$ has on $y$.
+
+### Step 2: Conquering Non-linearity
+
+Neural networks must model complex, **non-linear data**. When dealing with a non-linear function, such as a parabola ($f(x)=2x^2$), the measure of impact—the slope—is no longer constant; it changes at every point along the curve.
+
+The mathematical tool required to measure the slope at a single point on a curve is the **derivative**. This derivative, referred to as the **instantaneous rate of change**, describes the slope of the **tangent line** at that specific point.
+
+<div align="center">
+  <img src="/img/blog/parabola-tangents.png" alt="A graph of the non-linear function y=2x^2, a parabola opening upwards. Multiple tangent lines are drawn at different x-values, showing that the slope (rate of change) is steep at high x values and flat near x=0." />
+</div>
+<br />
+
+[Figure 7.09: Visualization of how the derivative (slope) changes across a non-linear function ($f(x)=2x^2$). The tangent lines show that the rate of change is small near the vertex ($x=0$) and increases rapidly as $x$ increases. This varying slope is the information we need to know how to adjust parameters.]
+
+## Numerical vs. Analytical Solutions
+
+There are two primary ways to solve for a derivative:
+
+### 1. Numerical Differentiation (The Brute-Force Method)
+
+Numerical differentiation involves approximating the slope by selecting two points that are "sufficiently close" to each other (separated by a tiny $\Delta x$) and calculating the rise over run between them. As the distance between the two points shrinks, the approximation becomes more accurate.
+
+However, this method is fundamentally inefficient for deep learning models. A functional loss function in a neural network is an "absolutely massive function" operating in multiple dimensions. Calculating the derivative numerically requires performing a complete forward pass (to calculate the loss) for every single weight and bias parameter in the network, then performing the forward pass again after changing that parameter by a tiny delta value. This repetitive process is computationally too time-consuming to be practical for training large networks.
+
+### 2. Analytical Differentiation (The Exact Solution)
+
+The only feasible solution for optimization is the **analytical derivative**, which provides the exact solution to the function's derivative. We don't have to brute-force approximations; instead, we follow mathematical rules to calculate the exact functional form of the derivative.
+
+The derivative of a complex function, such as the overall loss function, can be found by breaking it down into elemental functions and solving them using known rules.
+
+## Essential Derivative Rules
+
+To prepare for applying analytical derivatives to complex neural network operations, here are foundational rules necessary for defining optimization functions in code:
+
+| Function | Notation | Derivative | Rule |
+| :--- | :--- | :--- | :--- |
+| **Constant** | $f(x) = c$ | $f'(x) = 0$ | The derivative of a constant equals $0$. |
+| **Linear** | $f(x) = x$ | $f'(x) = 1$ | The derivative of $x$ equals $1$. |
+| **Linear Multiplied** | $f(x) = mx + b$ | $f'(x) = m$ | The derivative equals the slope $m$. |
+| **Constant Multiple Rule** | $\frac{d}{dx} [k \cdot f(x)]$ | $k \cdot \frac{d}{dx} f(x)$ | A constant multiple ($k$) can be moved outside the derivative calculation. |
+| **Power Rule** | $\frac{d}{dx} x^n$ | $n \cdot x^{n-1}$ | Used for exponents; the exponent $n$ becomes a coefficient, and the exponent is reduced by 1. |
+| **Sum/Difference Rule** | $\frac{d}{dx} [f(x) \pm g(x)]$ | $f'(x) \pm g'(x)$ | The derivative of a sum (or difference) is the sum (or difference) of the individual derivatives. |
+
+The true loss function involves many parameters (inputs, weights, and biases). Solving these multivariate problems requires calculating the impact of each input independently—a concept known as the **partial derivative**—which we will cover next, followed by combining these steps using the **chain rule**.

@@ -1,5 +1,6 @@
 export type Chapter = {
     title: string;
+    shortTitle?: string;
     slug: string;
 };
 

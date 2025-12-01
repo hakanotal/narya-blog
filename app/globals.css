@@ -47,3 +47,13 @@ body {
     background-color: rgba(0, 0, 0, 0.2);
   }
 }
+
+/* KaTeX Customization */
+.katex-display {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}

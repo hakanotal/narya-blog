@@ -3,6 +3,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import remarkGfm from "remark-gfm";
 
 export default async function Page({
     params,
@@ -38,6 +39,23 @@ export default async function Page({
         strong: (props: any) => (
             <strong className="font-bold" {...props} />
         ),
+        table: (props: any) => (
+            <div className="overflow-x-auto my-8">
+                <table className="min-w-full text-left text-sm" {...props} />
+            </div>
+        ),
+        thead: (props: any) => (
+            <thead className="bg-gray-200 dark:bg-neutral-800" {...props} />
+        ),
+        th: (props: any) => (
+            <th className="px-4 py-3 font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-300 dark:border-neutral-700" {...props} />
+        ),
+        td: (props: any) => (
+            <td className="px-4 py-3 border-b border-gray-100 dark:border-neutral-800" {...props} />
+        ),
+        tr: (props: any) => (
+            <tr className="hover:bg-gray-50 dark:hover:bg-neutral-900 transition-colors" {...props} />
+        ),
     };
 
     return (
@@ -59,7 +77,7 @@ export default async function Page({
                     components={components}
                     options={{
                         mdxOptions: {
-                            remarkPlugins: [remarkMath],
+                            remarkPlugins: [remarkMath, remarkGfm],
                             rehypePlugins: [rehypeKatex],
                         }
                     }}

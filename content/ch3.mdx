@@ -1,0 +1,74 @@
+---
+title: "Adding Depth: The Power of Hidden Layers and Non-linear Data"
+shortTitle: "Adding Depth"
+
+date: "December 2025"
+
+readTime: "7 min read"
+
+category: "AI and ML"
+
+---
+
+In the last chapter, we conquered the mathematics and coding efficiency of a single layer of neurons using vectorization. However, if deep learning models were limited to just one layer, they wouldn't solve any of the complex problems we throw at them. This chapter is about introducing *depth*—building complex architectures that can tackle the messy, non-linear reality of real-world data.
+
+A neural network transitions from a simple network to a "deep" neural network when it incorporates **two or more hidden layers**. We will explore why this architectural depth is non-negotiable for serious machine learning tasks and how we structure our code to support it.
+
+<div className="my-12 flex justify-center text-gray-300">
+
+  ╌╌╌╌
+
+</div>
+
+## The Necessity of Hidden Layers
+
+So, what exactly is a "hidden layer"?
+
+A hidden layer is any computational layer that sits between the initial input layer and the final output layer. As the scientist or user, you see the input data and the resulting output, but the values generated within these intermediate layers are generally hidden from direct view during data input or output. While they are called "hidden," they are often accessed to diagnose or improve the network's performance.
+
+The architectural shift that necessitates these layers is driven by the nature of the data we want to model:
+
+### Linear vs. Non-linear Data
+
+If data points can be generally represented or separated by a straight line, they are considered **linear data**. Linear data is straightforward and can often be solved by simpler machine learning methods than complex neural networks.
+
+However, real-world problems—like classifying images or understanding language—rarely present themselves as easily separable straight lines. These problems involve **non-linear data**, which cannot be effectively fit by a single straight line.
+
+Neural networks must learn to map these complex, non-linear relationships. This is precisely why we need multiple, densely connected layers working together to carve out complex decision boundaries.
+
+A classic example of a complex, non-linear dataset is the Spiral dataset:
+
+![The Spiral dataset, where three classes of data points are arranged in overlapping spirals.](/figures/ch3-spiral-data.png)
+
+Tackling this requires specialized tools to generate and handle this data, such as NumPy and custom functions like `spiral_data`.
+
+## Building the Dense Layer Class
+
+To manage the architectural scale required for deep learning, we cannot rely on writing hardcoded calculations for every single neuron. We must adopt a modular, class-based approach.
+
+In modern terminology, the fully connected architecture we discussed previously is commonly referred to as a **dense layer** in literature and code.
+
+We will encapsulate the logic for a dense layer—including initialization of weights and biases, and the forward computation—into a reusable class, `Layer_Dense`.
+
+### 1. Layer Initialization (`__init__`)
+
+When initializing a layer, we need to know two crucial dimensions: the number of inputs coming in (`n_inputs`) and the desired number of neurons (outputs) in that layer (`n_neurons`).
+
+*   **Weights:** We initialize weights randomly using a small value (e.g., multiplying random numbers by `0.01`). This initialization is critical for performance later, helping to ensure the model doesn't start training with values that are too large or too small. We set the shape of the weights as `(n_inputs, n_neurons)`. We choose this shape, rather than `(n_neurons, n_inputs)`, to avoid requiring a runtime transposition of the weights matrix every time we perform a forward pass.
+*   **Biases:** Biases are most commonly initialized to zero.
+
+### 2. The Forward Pass
+
+Once initialized, the layer needs a mechanism to receive input (either the initial data or the output of a previous layer) and compute its output. This process is formalized in the `forward` method.
+
+In a deep network, the data flows sequentially: the output of a given layer becomes the input to the next layer.
+
+![A visual representation of a deep neural network segment. Input features (in this case, 4 features) pass into the first hidden layer (3 neurons), and the resulting outputs then become the inputs for the second hidden layer (3 neurons).](/figures/ch3-deep-network.png)
+
+The core calculation remains the matrix product of inputs and weights, summed with the biases:
+
+$$\text{output} = \text{np.dot}(\text{inputs}, \text{self.weights}) + \text{self.biases}$$
+
+By implementing the `Layer_Dense` class with these methods, we have established a robust foundation for constructing deep networks capable of handling highly complex non-linear data.
+
+Now that we have layers ready to receive inputs and produce outputs, the final component before training is the **activation function**, which is responsible for applying non-linearity to the calculated output—a requirement for solving problems like the spiral classification task. This is the subject of our next post.

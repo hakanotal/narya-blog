@@ -66,6 +66,12 @@ export default function Sidebar({ content = [] }: SidebarProps) {
                             <ul className="flex flex-col gap-2 pl-2 border-l border-black/5 dark:border-white/10 ml-1">
                                 {category.chapters.map((chapter) => {
                                     const isActive = pathname.includes(chapter.slug);
+                                    const match = chapter.slug.match(/ch(\d+)/);
+                                    const chapterNum = match ? match[1] : "";
+                                    const displayTitle = chapterNum
+                                        ? `#${chapterNum}: ${chapter.shortTitle || chapter.title}`
+                                        : (chapter.shortTitle || chapter.title);
+
                                     return (
                                         <li key={chapter.slug}>
                                             <Link
@@ -77,7 +83,7 @@ export default function Sidebar({ content = [] }: SidebarProps) {
                                                         : "text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-500"
                                                 )}
                                             >
-                                                {chapter.title}
+                                                {displayTitle}
                                             </Link>
                                         </li>
                                     );

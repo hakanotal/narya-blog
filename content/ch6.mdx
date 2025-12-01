@@ -1,0 +1,63 @@
+---
+title: "Finding the Optimal Path: Why Random Search Fails in Neural Network Optimization"
+shortTitle: "🚧"
+
+date: "December 2025"
+
+readTime: "7 min read"
+
+category: "AI and ML"
+
+---
+
+We have successfully built a mechanism for prediction (forward pass) and a way to quantify its mistakes (loss function). The next challenge, which defines the true difficulty of deep learning, is **optimization**. This process requires intelligently adjusting the millions of internal parameters (weights and biases) to decrease the calculated loss.
+
+The goal is deceptively simple: find the combination of parameters that yields the lowest possible loss. But how do we find them when the number of possible combinations is virtually infinite?
+
+<div className="my-12 flex justify-center text-gray-300">
+
+  ╌╌╌╌
+
+</div>
+
+## The High Cost of Pure Randomness
+
+If you're building a system to minimize error, the most rudimentary idea is to try different parameter combinations at random until you find one that works better.
+
+This approach involves two steps:
+1.  Randomly change all the weights and biases in the network.
+2.  Check the new loss value. If the loss is lower than the previous best loss, save those new parameters.
+
+To test this idea, let's look at a simple classification problem using a dataset specifically designed to illustrate the difficulty of separation: **Vertical Data**.
+
+<div align="center">
+  <img src="/img/blog/vertical-data.png" alt="A scatter plot showing three distinct classes of data points (colored blue, red, and green) grouped vertically on an XY axis, demonstrating an intertwined classification problem." />
+</div>
+<br />
+
+[Figure 6.01: A visualization of the "Vertical Data" dataset, showing three classes clustered vertically. This dataset is used to illustrate optimization challenges because, despite its seeming simplicity, randomly searching for clear classification boundaries proves ineffective.]
+
+### The Failure of Random Search
+
+When running a random search algorithm on even a simple problem like the vertical data, the results quickly show its futility. Even after thousands of iterations, the loss barely budges, and accuracy remains low.
+
+The reason is simple: the sheer number of possible combinations for weights and biases is enormous and infinite, meaning pure luck is not a reliable method for success. Randomly searching for optimal weight and bias combinations takes far too long to be acceptable.
+
+## Introducing Parameter Adjustment
+
+Since totally random parameter resets failed, a slightly more intelligent, though still basic, method is necessary. Instead of setting parameters to entirely new random values each iteration, we can make small, randomized *adjustments* based on the previous best performance.
+
+This method involves taking a small fraction of a randomly chosen value and applying it as an adjustment to the current weights and biases:
+
+1.  Randomly adjust the current set of weights and biases by a small amount.
+2.  Perform a forward pass and check the resulting loss.
+3.  **If the loss is smaller:** Save the new weights and biases as the new best parameters.
+4.  **If the loss increases:** Revert the weights and biases to the previously saved best parameters.
+
+This process ensures that the parameters only move in directions that locally reduce the error, providing a primitive form of learning.
+
+While this approach is an improvement over resetting the parameters completely—achieving better loss reduction and accuracy—it still suffers from fundamental flaws. The optimization can still get stuck, often in a **local minimum** of loss, preventing further progress.
+
+This demonstrates that finding the optimum weights and biases requires a method that understands the *impact* that each parameter has on the final loss. This necessary jump from "random chance" to "informed direction" is what introduces calculus—specifically derivatives and gradients—which are the subject of our next post.
+
+---

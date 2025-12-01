@@ -1,0 +1,98 @@
+---
+title: "Unpacking the Gradient: Partial Derivatives and the Critical Chain Rule"
+shortTitle: "🚧"
+
+date: "December 2025"
+
+readTime: "7 min read"
+
+category: "AI and ML"
+
+---
+
+In our last discussion, we mastered the core concept of the derivative: measuring the instantaneous rate of change (slope) of a function. That was essential, but it only covered functions with a single input variable.
+
+Real-world neural networks are far more complex. A single neuron's output depends on many parameters—multiple inputs, multiple weights, and one bias. To intelligently optimize our network, we need to know the individual impact of *every single one* of these parameters on the final loss.
+
+This chapter introduces the tools required to solve multivariate calculus problems, forming the mathematical backbone of efficient network training: **partial derivatives**, **gradients**, and the **chain rule**.
+
+<div className="my-12 flex justify-center text-gray-300">
+
+  ╌╌╌╌
+
+</div>
+
+## The Problem: Functions with Many Variables
+
+In standard calculus, if you have a function $f(x)$, the derivative $\frac{d}{dx} f(x)$ measures how $x$ changes $f(x)$.
+
+In a neural network, a single layer output $z$ is a function of multiple variables (inputs $x$ and weights $w$):
+$$z = (x_1 w_1) + (x_2 w_2) + \dots + b$$
+The derivative of such a function must account for the impact of every parameter.
+
+## 1. Isolating Impact: The Partial Derivative
+
+The **partial derivative** is the mathematical tool used to measure the influence of a *single* input variable on a function's output. The calculation method is the same as for a regular derivative.
+
+The key difference is conceptual: when calculating the partial derivative with respect to one input, all other independent input variables must be treated as **constants**.
+
+Let's look at simple, multi-variable operations we see constantly inside a layer:
+
+### Partial Derivative of a Sum
+Consider a simple function $f(x, y) = x + y$. If we want to find the impact of $x$ on $f$, we treat $y$ as a constant:
+
+$$\frac{\partial}{\partial x} f(x, y) = \frac{\partial}{\partial x} [x+y] = \frac{\partial}{\partial x} x + \frac{\partial}{\partial x} y$$
+
+Since the derivative of $x$ with respect to $x$ is 1, and the derivative of a constant ($y$) is 0, the result is:
+$$\frac{\partial}{\partial x} f(x, y) = 1 + 0 = 1$$
+
+This makes intuitive sense: a change in $x$ by 1 changes the function output by 1.
+
+### Partial Derivative of Multiplication
+Consider the multiplication found in a weighted sum: $f(x, w) = x \cdot w$. If we want the impact of $x$, we treat $w$ (the weight) as a constant:
+
+$$\frac{\partial}{\partial x} f(x, w) = w \cdot \frac{\partial}{\partial x} x = w \cdot 1 = w$$
+
+Here, the partial derivative is $w$. The intuition is that if you change $x$ by 1, the result changes by $w$ (the constant factor it is multiplied by).
+
+### The ReLU Partial Derivative
+A final example vital for deep learning is the partial derivative of the $\max()$ function, used in ReLU. If we calculate the derivative of $\max(x, 0)$ with respect to $x$:
+
+$$\frac{d}{dx} \max(x, 0) = 1 \quad \text{if } x > 0$$
+$$\frac{d}{dx} \max(x, 0) = 0 \quad \text{if } x \le 0$$
+
+If the input is positive, the derivative is 1 (the output slope is $y=x$). If the input is negative, the derivative is 0 (the output slope is $y=0$).
+
+## 2. Combining Impacts: The Gradient
+
+When we calculate all the partial derivatives of a multivariate function—one for each input variable—we combine them into a single structure called the **gradient**.
+
+The gradient is a **vector** (an ordered list of values) where each element is the partial derivative of the function with respect to a single independent variable.
+
+For a function $f(x, y, z)$, the gradient looks like this:
+
+$$
+\nabla f(x, y, z) =
+\begin{bmatrix}
+  \frac{\partial}{\partial x} f(x, y, z) \\
+  \frac{\partial}{\partial y} f(x, y, z) \\
+  \frac{\partial}{\partial z} f(x, y, z)
+\end{bmatrix}
+$$
+
+The gradient provides the specific set of equations needed to quantify the influence of every weight and bias in the system.
+
+## 3. Stitching it Together: The Chain Rule
+
+A fundamental property of neural networks is that they are massive **chains of composite functions**. The output of one function (e.g., a dense layer's summation) becomes the input to the next (e.g., the activation function), and so on, until the final loss function.
+
+To find the impact of an initial input $x$ on the final result $y$ in a chain $y = g(f(x))$, we rely on the **Chain Rule**.
+
+The Chain Rule states that the derivative of a function chain is calculated by taking the **product of the derivatives of all the functions** in that chain.
+
+For two chained functions:
+$$\frac{d}{dx} f(g(x)) = \frac{d f(g(x))}{d g(x)} \cdot \frac{d g(x)}{d x}$$
+
+This concept is paramount. The full network loss ($L$) is influenced by every weight and bias in every layer. By applying the Chain Rule backwards, starting from the final loss calculation and multiplying the partial derivatives of each intermediate operation—layer summations, activation functions, and layer outputs—we can calculate the precise influence of *any* single weight or bias on the final error.
+
+This process of working backward through the function chain using gradients and the chain rule is known as **Backpropagation**, which provides the direction and magnitude needed to minimize loss during training.

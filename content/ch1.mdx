@@ -1,0 +1,82 @@
+---
+title: "Neural Networks 101: Demystifying the Foundation of Deep Learning"
+shortTitle: "Neural Networks 101"
+
+date: "December 2025"
+
+readTime: "8 min read"
+
+category: "AI and ML"
+
+---
+
+As software engineers, we often encounter complex black boxes in the world of AI. Our goal here is simple: peel back the layers and understand exactly how neural networks function, starting from the ground up. This approach, building from scratch, is designed to demystify neural networks and deep learning, turning what seems like an intimidating topic into an engaging and educational experience.
+
+This post lays the groundwork by exploring the core definitions, structure, and foundational math behind these powerful systems.
+
+<div className="my-12 flex justify-center text-gray-300">
+
+  ╌╌╌╌
+
+</div>
+
+## The Hierarchy of Intelligence
+
+First, let's contextualize where Neural Networks fit within the broader AI landscape.
+
+Neural Networks (NNs), sometimes previously called Artificial Neural Networks (ANNs), are a specific type of machine learning. They form a key component in the modern AI structure.
+
+| Field | Definition |
+| :--- | :--- |
+| **Artificial Intelligence (AI)** | The broadest field. |
+| **Machine Learning (ML)** | A subset of AI focused on learning patterns from data. |
+| **Neural Networks (NN)** | A specific type of ML model inspired by the human brain. |
+| **Deep Neural Networks** | NNs characterized by having two or more **hidden layers**. |
+
+It's safe to say that most neural networks used today fall under the umbrella of deep learning.
+
+Here is a simple visualization of this nesting structure:
+
+![A hierarchical representation where Artificial Intelligence is the largest field, encompassing Machine Learning, which in turn encompasses Neural Networks. Deep Neural Networks, defined by having two or more hidden layers, are the innermost set.](/figures/ch1-hierarchy.png)
+
+## The Core Component: A Single Neuron
+
+Neural networks fundamentally originated from scientists attempting to create machines that could take an input and produce a desired output, primarily for tasks like **classification** (sorting inputs into categories) and **regression** (predicting a numerical value).
+
+The basic building block is the **neuron**, which mimics a biological neuron by either "firing" (outputting 1) or not (outputting 0), acting like an on-off switch.
+
+A neuron processes information using three key elements:
+
+1.  **Inputs:** The incoming data features (e.g., sensor readings, pixel values).
+2.  **Weights:** Adjustable parameters that determine the importance (or fraction) of each input. These are multiplied by their respective inputs.
+3.  **Bias:** An additional adjustable parameter, which is summed with the weighted inputs.
+
+The calculation performed by a single neuron boils down to this:
+$$\text{Output} = \sum (\text{Input} \cdot \text{Weight}) + \text{Bias}$$
+The neuron's calculated output value is then passed through an **activation function**. Historically, a simple **step function** was used: if the result of the calculation is greater than 0, the neuron outputs 1; otherwise, it outputs 0.
+
+![A graph of the step activation function. This function mimics a neuron firing: if the input value (x-axis) is greater than 0, the output (y-axis) is 1; otherwise, the output is 0.](/figures/ch1-step-function.png)
+
+## Architecting the Network: Layers
+
+When multiple neurons are organized, they form **layers**. A complete neural network structure generally consists of three types of layers:
+
+1.  **Input Layer:** This layer holds the actual feature data being fed into the model. These inputs must be numeric and are often preprocessed using techniques like *normalization* and *scaling*.
+2.  **Hidden Layers:** These layers lie between the input and output layers. Their values are generated and controlled by the network during computation, thus making them "hidden" from the user/scientist's direct input or output views. As noted, having two or more hidden layers qualifies the network as "deep".
+3.  **Output Layer:** This layer produces the final results of the network. For a **classification** task, this layer typically has as many neurons as there are classes (e.g., 10 output neurons for 10 types of clothing).
+
+When every neuron in a current layer is connected to every neuron in the previous layer, this is known as a **fully connected** or **dense** neural network.
+
+![A visualization of a simple neural network segment where the input layer connects to a first hidden layer, which then connects to a second hidden layer.](/figures/ch2-nn-dense.png)
+
+## Conquering the Complexity: The Math
+
+Neural networks often intimidate beginners due to the complex mathematical notation they frequently encounter.
+
+When represented as one massive function encompassing all layers, weights, biases, and activation functions, the math for even a simple forward pass can look overwhelmingly daunting.
+
+However, the secret to mastering this topic lies in recognizing that the entire structure is merely a **chain of simple mathematical operations**. While a full network equation is complex, breaking it down reveals that the calculations (like summation, exponentiation, and dot product) rely solely on fundamental concepts derivable from basic high school algebra.
+
+A typical neural network, despite its complexity, operates as a single, enormous function defined by its massive number of adjustable **parameters** (weights and biases)—often thousands or even millions of them. The core challenge isn't the math itself, but intelligently finding the optimal combination of these parameter values that minimizes the resulting error. This intelligent adjustment process is what the subsequent chapters focus on: calculating the error, derivatives, gradients, and optimization.
+
+---

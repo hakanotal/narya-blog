@@ -1,0 +1,85 @@
+---
+title: "The Architecture of Intelligence: Coding Your First Neural Network Components"
+shortTitle: "Architecture of Intelligence"
+
+date: "December 2025"
+
+readTime: "7 min read"
+
+category: "AI and ML"
+
+---
+
+In our previous post, we mapped out where Neural Networks sit within the AI hierarchy. Now, we roll up our sleeves. For software engineers, demystifying deep learning starts with understanding its foundational components at the code level. This chapter focuses on the basic building block—the neuron—and how we scale that concept efficiently into functioning layers using foundational linear algebra concepts.
+
+<div className="my-12 flex justify-center text-gray-300">
+
+  ╌╌╌╌
+
+</div>
+
+## The Atomic Unit: A Single Neuron
+
+Neural networks derive their structure from attempts to model biological processes, where the single fundamental unit is the neuron. An artificial neuron takes inputs and processes them through a calculation involving two crucial, adjustable parameters: weights and biases.
+
+Here’s the breakdown of the calculation process for a single neuron:
+
+1.  **Input & Weight Multiplication:** The neuron receives numerical input features. Each input value is multiplied by its corresponding **weight**. The weight is an adjustable parameter that determines the "fraction" or relative importance of that input.
+2.  **Summation:** All resulting products (input multiplied by weight) are summed together.
+3.  **Bias Addition:** An additional adjustable parameter, the **bias**, is added to this sum.
+
+In essence, a single neuron performs a weighted sum plus a bias, and outputs the result.
+
+$$\text{Output} = (\text{Input}_1 \cdot \text{Weight}_1) + (\text{Input}_2 \cdot \text{Weight}_2) + \dots + \text{Bias}$$
+
+For example, given inputs of `[1.0, 2.0, 3.0]`, weights `[0.2, 0.8, -0.5]`, and a bias of `2.0`, the output calculation would be $1.0\cdot0.2 + 2.0\cdot0.8 + 3.0\cdot(-0.5) + 2.0$, resulting in $2.3$.
+
+## Scaling Up: The Layer of Neurons
+
+A typical neural network organizes these single neurons into cohesive groups called **layers**.
+
+A layer is simply a collection of multiple neurons. Crucially, every neuron within a layer processes the *exact same set of inputs* (either the initial training data or the output from a previous layer). However, each individual neuron maintains its own unique set of weights and its own unique bias, ensuring that each neuron produces a unique output value.
+
+When every neuron in a current layer is connected to every neuron in the previous layer, this structure is known as a **fully connected** or **dense** neural network.
+
+### The Need for Efficiency
+
+If you were to scale up a network using native Python data structures like lists and simple, hardcoded calculations for many layers and hundreds of neurons, the complexity quickly becomes unmanageable.
+
+Consider handling many layers of data flowing through the network:
+
+![A visualization of a simple neural network segment where the input layer connects to a first hidden layer, which then connects to a second hidden layer.](/figures/ch2-nn-dense.png)
+
+To manage this complexity, we must replace manual coding with iteration (loops) and utilize libraries optimized for rapid numerical computation.
+
+## Tensors, Batches, and NumPy
+
+In modern deep learning, the fundamental data structure is the **tensor**. While debated in mathematical terms, for a computer scientist in deep learning, a tensor is best thought of as a generalized N-dimensional array.
+
+For Python programmers entering this space, **NumPy** is the most important and useful package for data science, specializing in highly efficient matrix and array math (often referred to as tensor math).
+
+### Processing Data in Batches
+
+When training a neural network, data is fed not as one sample at a time, but in groups called **batches**.
+*   A **sample** (or observation) is a single set of feature data (e.g., `[1.0, 2.0, 3.0, 2.5]`).
+*   A **batch** is an array containing multiple samples.
+
+Handling layers and batches simultaneously demands advanced linear algebra operations to keep computation fast.
+
+### The Power of Matrix Multiplication
+
+A single neuron uses summation of products, but a layer operating on a batch of data uses the **matrix product** to calculate all outputs simultaneously.
+
+The matrix product performs atomic dot products between all possible combinations of rows from the first matrix and columns from the second matrix. This is how a layer's calculation is vectorized.
+
+To calculate the forward pass for a layer on a batch of inputs using NumPy, we leverage the dot product function (`np.dot()`). However, we must ensure the dimensions align correctly for the calculation to produce the desired output—a list of layer outputs corresponding to each sample in the batch.
+
+This requires introducing the concept of **transposition**. Transposition modifies a matrix by turning its rows into columns and its columns into rows.
+
+By calculating the dot product of the input batch (where each row is a sample) and the **transposed** weights matrix, the calculation efficiently yields the full layer output for the entire batch:
+
+$$\text{Layer Output} = \text{np.dot}(\text{Inputs}, \text{Weights}^T) + \text{Biases}$$
+
+Using transposition $(\text{Weights}^T)$ on the weights matrix turns the row vectors of weights into column vectors, enabling the matrix product to correctly relate inputs to weights and produce a resulting array structured by sample. This vectorized approach is essential for high-performance deep learning.
+
+As we move forward, we will implement these concepts into code to transform a set of random inputs and parameters into a deep learning model capable of prediction, quantified by activation functions and calculated error.

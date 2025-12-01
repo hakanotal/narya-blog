@@ -1,0 +1,86 @@
+---
+title: "Backpropagation: The Engine That Drives Deep Learning"
+shortTitle: "🚧"
+
+date: "December 2025"
+
+readTime: "7 min read"
+
+category: "AI and ML"
+
+---
+
+In previous chapters, we acquired the theoretical heavy artillery—derivatives, partial derivatives, and the gradient vector. These concepts quantify the exact influence of every parameter in our neural network. Now, we finally connect the theory to practice via **Backpropagation**.
+
+Backpropagation is the algorithmic process that efficiently calculates the gradients needed to train a neural network. It applies the chain rule, running backward from the final loss calculation to determine the necessary adjustments for every single weight and bias in the model. This process provides the intelligent direction required to minimize error and begin learning.
+
+<div className="my-12 flex justify-center text-gray-300">
+
+  ╌╌╌╌
+
+</div>
+
+## The Core Mechanism of Backpropagation
+
+Neural networks are constructed as massive chains of composite functions. The output of one layer (or function) becomes the input for the next. The final function in this chain is the Loss Function, which measures error.
+
+The goal of backpropagation is to efficiently find the **gradient of the Loss Function** with respect to every weight and bias. To do this, we work backward through the network, layer by layer, starting from the calculated loss value and applying the Chain Rule.
+
+The Chain Rule dictates that the derivative of a composite function is the product of the derivatives of the individual functions in the chain. In backpropagation, this translates to: the gradient flowing backward through an operation is multiplied by the partial derivative of that operation itself.
+
+For a single activated neuron, the calculation is a chain of operations: ReLU applied to the sum of weighted inputs and bias.
+$$\text{Output} = \text{ReLU}(\sum [\text{inputs} \cdot \text{weights}] + \text{bias})$$
+To find the impact of an initial weight ($w_0$) on the final ReLU output, we multiply the derivatives of all chained functions: the derivative of the ReLU function multiplied by the partial derivative of the sum function multiplied by the partial derivative of the multiplication function (w.r.t $w_0$).
+
+## Backpropagating a Single Neuron
+
+To simplify the introduction to this concept, we first calculate the gradient for a single neuron using the Rectified Linear Unit (ReLU) activation function, demonstrating how the chain rule propagates the gradient backward through the atomic operations.
+
+### 1. The ReLU Activation
+
+We begin at the end of the neuron's calculation: the ReLU activation function. If the input ($z$) is positive, the derivative of ReLU with respect to its input is 1; otherwise, it is 0.
+
+When we receive an incoming gradient (`dvalue`) from the subsequent layer, the gradient passed backward to the sum operation is simply the incoming gradient multiplied by the ReLU derivative:
+$$\text{dReLU\_dz} = \text{dvalue} \cdot (1 \quad \text{if } z > 0 \text{ else } 0)$$
+
+### 2. The Summation Operation
+
+The next step backward is the summation of weighted inputs and bias ($z$). For an addition operation, the partial derivative with respect to any of its inputs (whether a weighted input like $x_0w_0$ or the bias $b$) is always 1.
+
+Using the chain rule, the gradient flowing backward into each weighted input is the outgoing gradient from ReLU ($\text{dReLU\_dz}$) multiplied by the partial derivative of the sum (which is 1).
+
+### 3. The Multiplication Operation
+
+The summation gradient then flows backward into the multiplication operation ($x_i \cdot w_i$). The partial derivatives for multiplication are crucial:
+*   The partial derivative with respect to the input ($x$) equals the weight ($w$).
+*   The partial derivative with respect to the weight ($w$) equals the input ($x$).
+
+We calculate two necessary gradients here:
+1.  **Gradient on Weights ($\mathbf{dw}$):** Used to update the parameters. This is the partial derivative with respect to $w_i$, which is $x_i$, multiplied by the incoming gradient from the sum operation.
+2.  **Gradient on Inputs ($\mathbf{dx}$):** Used to pass the gradient further backward to the preceding layer. This is the partial derivative with respect to $x_i$, which is $w_i$, multiplied by the incoming gradient from the sum operation.
+
+The full set of partial derivatives—$\mathbf{dx}$, $\mathbf{dw}$, and $\mathbf{db}$ (gradient on bias)—are collectively the **gradients** needed for optimization.
+
+## Scaling Up: Backpropagation in Layers
+
+Manually coding these derivative calculations for millions of parameters is impossible. We must vectorize the backward pass using efficient matrix mathematics (NumPy).
+
+When backpropagating through a dense layer, we need to efficiently calculate the gradients for an entire batch of inputs and all associated weights simultaneously:
+
+| Gradient Target | Calculation Method |
+| :--- | :--- |
+| **Gradients on Inputs ($\mathbf{dinputs}$)** | Calculated by multiplying the incoming gradient (`dvalues`) by the **transposed** weights matrix. This gradient (`dinputs`) is passed to the preceding layer's backward method. |
+| **Gradients on Weights ($\mathbf{dweights}$)** | Calculated using the dot product of the transposed input matrix and the incoming gradient (`dvalues`). |
+| **Gradients on Biases ($\mathbf{dbiases}$)** | Calculated by summing the incoming gradients (`dvalues`) along the sample axis (axis=0), maintaining the correct shape for the bias vector. |
+
+To calculate the gradient on inputs ($\mathbf{dinputs}$), we rely on the NumPy dot product function, ensuring the dimensions align by transposing the weight matrix.
+
+## Combining Softmax and Categorical Cross-Entropy
+
+In classification tasks, the output layer uses Softmax activation, followed immediately by Categorical Cross-Entropy (CCE) loss. Since these functions are chained, we can derive the derivative of the combined Softmax-CCE operation.
+
+Calculating the gradients for Softmax and CCE separately involves complex steps, including enumerating outputs and building a Jacobian matrix for Softmax. This separate approach is inefficient—measuring nearly seven times slower in practice than the combined method.
+
+The combined derivative of Softmax and CCE simplifies the calculations significantly, making the implementation faster and simpler to code. Because of this massive performance gain, the combined loss-activation derivative is the standard implementation for classification tasks in modern deep learning.
+
+With the ability to calculate all necessary gradients via backpropagation, we now have the final piece of the training puzzle, leading us directly into the domain of optimizers, which use these gradients to intelligently modify the network's parameters.

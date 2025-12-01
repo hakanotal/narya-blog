@@ -51,6 +51,7 @@ export function getSidebarContent(): Category[] {
 
         categories[categorySlug].chapters.push({
             title: post.meta.title,
+            shortTitle: post.meta.shortTitle,
             slug: post.slug,
         });
     });
